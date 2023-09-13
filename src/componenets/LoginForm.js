@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const LoginForm = props => {
+const LoginForm = () => {
     const [credentials, setCredentials] = useState({
         username: '',
         password: ''
     })
+
+    const push = useNavigate();
 
     const handleChange = e => {
         const {name, value} = e.target;
@@ -16,6 +20,15 @@ const LoginForm = props => {
 
     const handleSubmit = e => {
         e.preventDefault();
+        axios.post("http://localhost:9000/api/login", credentials)
+            .then(res => {
+                console.log(res);
+                localStorage.setItem('token', res.data.token);
+                push('/friends');
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     return(
         <div>
